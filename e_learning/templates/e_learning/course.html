@@ -1,0 +1,40 @@
+{% extends "e_learning/layout.html" %}
+{% load static %}
+
+{% block script %}
+<script src="{% static 'e_learning/index.js' %}"></script>
+{% endblock %}
+{% block body %}
+
+{% if user.is_authenticated %}
+ <h2>{{message}}</h2>
+ {% endif %}  
+ <h1>view subject : {{course.course_name}} </h1>
+    
+<div>
+    <p>Subject name : {{subject.subject_name}}    </p>
+    {% if course.course_image %}
+        <p>
+            Image: <br>
+            <img src="{{ course.course_image.url }}" alt="Course Image" style="max-width: 100%; height: auto;">
+        </p>
+    {% else %}
+        <p>No image available.</p>
+    {% endif %}
+    <p>content : <br>{{course.course_content}}    </p>
+    <p> Teacher : {{subject.teacher.teacher_user}}    </p>
+    <p> created at : {{course.created_at}}    </p>
+    {% if course.course_documents %}
+    <p>
+        Document: <a href="{{ course.course_documents.url }}" >Download Document</a>
+    </p>
+    {% else %}
+    <p>No document available.</p>
+    {% endif %}
+   
+    
+
+</div>
+
+
+{% endblock %}

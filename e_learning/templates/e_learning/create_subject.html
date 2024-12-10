@@ -1,0 +1,22 @@
+{% extends "e_learning/layout.html" %}
+{% load static %}
+
+{% block script %}
+<script src="{% static 'e_learning/index.js' %}"></script>
+{% endblock %}
+{% block body %}
+<h1>Create Subject </h1>
+<form id ="create_subject" method="post">
+    {% csrf_token %}
+    <input id ="teacher" name ="teacher" value="{{ request.user }}" hidden>
+    <label> Subject name</label>
+    <input type="text" name="subject_name" id="subject_name">
+    <label> Subject description</label>
+    <textarea name="subject_description" id="subject_description" required></textarea>
+    <input type="submit" id="create_subject" value="create subject">
+    
+
+</form>
+
+
+{% endblock %}

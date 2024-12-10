@@ -1,0 +1,24 @@
+{% extends "e_learning/layout.html" %}
+{% load static %}
+
+{% block script %}
+<script src="{% static 'e_learning/index.js' %}"></script>
+{% endblock %}
+{% block body %}
+<a href="{% url 'create_subject' %}">Create Subject</a>
+<a href="{% url 'create_course' %}">Create Course</a>
+<h1> home</h1>
+{% if user.is_authenticated %}
+ <h2>{{message}}</h2>
+{% endif %}      
+<div style="display: flex;">
+    {% for subject in subjects %}
+    <div id="subject{{subject.id}}" style="border: 1px solid black ; height: 100px;width: 300px; margin: 4px; text-align: center; font-size: 3em;" >
+       {{subject.subject_name}}
+       <a href="{%url 'subject' subject.subject_name %}" class="btn btn-outline-primary">More... </a>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

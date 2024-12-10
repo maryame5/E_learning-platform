@@ -1,0 +1,19 @@
+from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from . import views
+
+urlpatterns = [
+    path("", views.index, name="index"),
+    path("login", views.login_view, name="login"),
+    path("logout", views.logout_view, name="logout"),
+    path("register", views.register, name="register"),
+    path("profil",views.profil, name="profil"),
+    path("create_subject",views.create_subject,name="create_subject"),
+    path("subject/<str:name>",views.subject,name="subject"),
+    path("create_course",views.create_course,name="create_course"),
+    path("course/<str:name>",views.course,name="course"),
+
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

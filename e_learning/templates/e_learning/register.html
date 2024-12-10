@@ -1,0 +1,44 @@
+{% extends "e_learning/layout.html" %}
+
+{% block body %}
+
+    <h2>Register</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+        </div>
+        <div class="user-type">
+            <h3>Select User Type:</h3>
+
+                <div>
+                    <input type="radio" id="admin" name="user_type" value="admin" >
+                    <label for="admin">Admin</label>
+                    <input type="radio" id="teacher" name="user_type" value="teacher" >
+                    <label for="teacher">Teacher</label>
+                    <input type="radio" id="student" name="user_type" value="student" >
+                    <label for="student">Student</label>
+                </div>
+
+            {{ form.user_type.errors }}
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="email" name="email" placeholder="Email Address">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Register">
+    </form>
+
+    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+
+{% endblock %}
