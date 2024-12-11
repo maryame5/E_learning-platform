@@ -9,26 +9,24 @@
 {% if user.is_authenticated %}
  <h2>{{message}}</h2>
  {% endif %}  
- <h1>view subject : {{course.course_name}} </h1>
+ {% if course.course_image %}
+ <p>
+     <img src="{{ course.course_image.url }}" alt="Course Image" style="width: 100%; height: 200px;">
+ </p>
+
+{% endif %}
+ <h1 style="color: rgb(65, 65, 65); text-align: center; font-size: 5em;">view course : <b style="color: rgb(48, 39, 39);">{{course.course_name}} </b></h1>
     
-<div>
+<div style="font-size: 3em;">
     <p>Subject name : {{subject.subject_name}}    </p>
-    {% if course.course_image %}
-        <p>
-            Image: <br>
-            <img src="{{ course.course_image.url }}" alt="Course Image" style="max-width: 100%; height: auto;">
-        </p>
-    {% else %}
-        <p>No image available.</p>
-    {% endif %}
+    
     <p>content : <br>{{course.course_content}}    </p>
     <p> Teacher : {{subject.teacher.teacher_user}}    </p>
     <p> created at : {{course.created_at}}    </p>
     {% if course.course_documents %}
-    <p>
-        Document: <a href="{{ course.course_documents.url }}" >Download Document</a>
-    </p>
-    {% else %}
+    <p>Document:</p>
+    <iframe src="{{ course.course_documents.url }}" style="width: 90%; height: 600px; border: solid 1px black;" allowfullscreen></iframe>
+{% else %}
     <p>No document available.</p>
     {% endif %}
    

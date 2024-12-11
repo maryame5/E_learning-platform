@@ -75,7 +75,7 @@ function create_course() {
                  name: name,
                  content: content,
                  image:image,
-                 document:c_document,
+                 
                  subject_name:subject_name
                  };
                       

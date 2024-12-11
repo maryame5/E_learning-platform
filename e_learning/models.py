@@ -29,8 +29,8 @@ class Course(models.Model):
     course_name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     course_content=models.TextField(blank=True)
-    course_documents=models.FileField(upload_to='e_learning/static/e_learning/course_documents/',null=True,blank=True)
-    course_image=models.ImageField(upload_to='e_learning/static/e_learning/course_img/',null=True,blank=True)
+    course_documents=models.FileField(upload_to='documents/',null=True,blank=True)
+    course_image=models.ImageField(upload_to='img/',null=True,blank=True)
 
 
 class Subject(models.Model):

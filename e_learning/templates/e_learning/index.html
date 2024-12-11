@@ -5,8 +5,12 @@
 <script src="{% static 'e_learning/index.js' %}"></script>
 {% endblock %}
 {% block body %}
+<ul>
 <a href="{% url 'create_subject' %}">Create Subject</a>
 <a href="{% url 'create_course' %}">Create Course</a>
+<a href="{% url 'edit_course' %}">edit Course</a>
+<a href="{% url 'delete_course' %}">delete Course</a>
+</ul>
 <h1> home</h1>
 {% if user.is_authenticated %}
  <h2>{{message}}</h2>

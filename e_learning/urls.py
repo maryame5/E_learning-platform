@@ -12,6 +12,8 @@ urlpatterns = [
     path("create_subject",views.create_subject,name="create_subject"),
     path("subject/<str:name>",views.subject,name="subject"),
     path("create_course",views.create_course,name="create_course"),
+    path("edit_course",views.edit_course,name="edit_course"),
+    path("delete_course",views.delete_course,name="delete_course"),
     path("course/<str:name>",views.course,name="course"),
 
 ]

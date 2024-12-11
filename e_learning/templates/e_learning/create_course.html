@@ -1,12 +1,10 @@
 {% extends "e_learning/layout.html" %}
 {% load static %}
 
-{% block script %}
-<script src="{% static 'e_learning/index.js' %}"></script>
-{% endblock %}
+
 {% block body %}
 <h1>Create Course </h1>
-<form id ="create_course" method="post">
+<form id ="create_course" method="post" enctype="multipart/form-data" action ="{% url 'create_course' %}">
     {% csrf_token %}
     <input id ="teacher" name ="teacher" value="{{ request.user }}" hidden>
     <label for="subject_name">Choose a subject:</label>
@@ -18,14 +16,14 @@
       
     </select>
 
-    <label for="course_name"> Course name</label>
-    <input type="text" name="course_name" id="course_name" required>
+    <label for="name"> Course name</label>
+    <input type="text" name="name" id="name" required>
     <label for="content"> Course content</label>
-    <textarea name="course_content" id="content" ></textarea>
+    <textarea name="content" id="content" ></textarea>
     <label for="course_image"> Course image</label>
     <input type="file" name="course_image" id="course_image" >
-    <label for="course_document"> Course documents</label>
-    <input type="file" name="course_document" id="course_document" >
+    <label for="course_documents"> Course documents</label>
+    <input type="file" name="course_documents" id="course_documents" >
     
     <input type="submit" id="create_course_button" value="create course">
     

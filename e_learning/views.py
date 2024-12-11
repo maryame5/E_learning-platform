@@ -151,35 +151,32 @@ def subject(request,name):
 def create_course(request):
     if request.method == "POST":
         try:
-            data = json.loads(request.body)
-            creator = data.get("teacher")
+            image=request.FILES.get("course_image")
+            document= request.FILES.get("course_documents")
+        
+            creator = request.user
             user= User.objects.get(username=creator)
             teacher = Teacher.objects.get(teacher_user=user)
-            name= data.get("name")
-            subject_name= data.get("subject_name")
-            content= data.get("content")
-            image=request.FILES.get("image")
-            document= request.FILES.get("document")
+            name= request.POST.get("name")
+            subject_name= request.POST.get("subject_name")
+            content= request.POST.get("content")
+           
            
             subjects= Subject.objects.filter(teacher=teacher)
             print("subjects",subjects)
-            print(f"Received data: {data}")
+            print(f"Received data: {image,document}")
 
-            if not name :
-                return JsonResponse({"Name is required"}, status=400)
-            if not content :
-                return JsonResponse("content is required", status=400)
+            if not name or not content:
+                return HttpResponse({"Name is required"}, status=400)
+            
             course= Course.objects.create(course_name=name,course_content=content,course_documents=document,course_image=image)
             course.save()
             subject = Subject.objects.get(subject_name=subject_name )
             subject.course.add(course)
-            return JsonResponse({"message": "Subject created successfully", "subject_id": subject.id}, status=201)
+            return HttpResponseRedirect(reverse("index"))
 
-        
-        except json.JSONDecodeError:
-            return JsonResponse("Invalid JSON", status=400)
         except Exception as e:
-            return JsonResponse({"error": f"Error: {str(e)}"}, status=400)
+            return HttpResponse({"error": f"Error: {str(e)}"}, status=400)
     if request.method == "GET":
         user = request.user
         try:
