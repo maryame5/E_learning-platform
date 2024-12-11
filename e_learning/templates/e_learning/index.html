@@ -15,7 +15,9 @@
 {% if user.is_authenticated %}
  <h2>{{message}}</h2>
 {% endif %}      
-<div style="display: flex;">
+<div style="display: flex; flex-wrap: wrap;
+align-content: flex-start;
+">
     {% for subject in subjects %}
     <div id="subject{{subject.id}}" style="border: 1px solid black ; height: 100px;width: 300px; margin: 4px; text-align: center; font-size: 3em;" >
        {{subject.subject_name}}

@@ -7,7 +7,7 @@
 {% endblock %}
 {% block body %}
 <h1>Delete Course </h1>
-<form id ="delete_course" method="post" enctype="multipart/form-data" >
+<form id ="delete_course" method="post"  >
     {% csrf_token %}
     <label for="subject_name">Choose a subject:</label>
     <select id="subject_name" name="subject_name"required>
@@ -33,6 +33,11 @@
     <button type ="submit" id="deletebut">Delete Course</button>
 
 </form>
+
+{% if error %} 
+{{error}}
+{% endif %}
+
 
 
 {% endblock %}

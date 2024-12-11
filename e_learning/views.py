@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .models import *
+from django.views.decorators.csrf import csrf_protect
 
 def login_view(request):
     if request.method == "POST":
@@ -128,7 +129,10 @@ def create_subject(request):
                 return JsonResponse("Description is required", status=400)
             subject = Subject.objects.create(subject_name=name , subject_description=description,teacher=teacher)
             subject.save()
-            return JsonResponse({"message": "Subject created successfully", "subject_id": subject.id}, status=201)
+            return JsonResponse({
+                "message": "Subject created successfully.",
+                "redirect_url": reverse("index")  # Include the URL to redirect to
+            }, status=201)
 
         
         except json.JSONDecodeError:
@@ -195,33 +199,49 @@ def course(request,name):
     subject = Subject.objects.get(course=course)
     return render(request, "e_learning/course.html",{"course":course,
                                                      "subject":subject})
-@csrf_exempt
+
 @login_required
+@csrf_protect
 def delete_course(request):
     creator=request.user
     user= User.objects.get(username=creator)
     if request.method == "POST":
         try: 
-            
-             data = json.loads(request.body)
-        
              teacher = Teacher.objects.get(teacher_user=user)
-             course_name = data.get("course_name")
-             subject_name=data.get("subject_name")
+             
+             subjects= Subject.objects.filter(teacher=teacher)
+             courses=[]
+        
+             for subject in subjects:
+                  for course1 in subject.course.all():
+                     courses.append(course1)
+             course_name = request.POST.get("course_name")
+             subject_name=request.POST.get("subject_name")
              course = Course.objects.get(course_name=course_name)
              subject=Subject.objects.get(subject_name=subject_name)
              if course not in subject.course.all():
-                return JsonResponse({"error": "Course not found in the selected subject."}, status=404)
+                error= "Course not found in the selected subject."
+                return render(request,"e_learning/delete_course.html",
+                      
+                  {"courses":courses,
+                   "error":error,
+                   "subjects":subjects})
 
              if teacher==subject.teacher:
             
                 subject.course.remove(course)
                 subject.save()
                 course.delete()
-                return JsonResponse({"message": "Course deleted successfully."}, status=200)
+                return HttpResponseRedirect(reverse("index"))
          
              else:
-               return JsonResponse({"error": "You do not have permission to delete this course."}, status=403)
+               error= "You do not have permission to delete this course."
+               return render(request,"e_learning/delete_course.html",
+                      
+                  {"courses":courses,
+                   "error":error,
+                   "subjects":subjects})
+
         except json.JSONDecodeError:
             return JsonResponse({"error":"Invalid JSON"}, status=400)
         except Exception as e:
@@ -230,13 +250,16 @@ def delete_course(request):
         teacher = Teacher.objects.get(teacher_user=user)
         subjects= Subject.objects.filter(teacher=teacher)
         courses=[]
+        
         for subject in subjects:
              for course in subject.course.all():
                  courses.append(course)
              
     
         return render(request,"e_learning/delete_course.html",
+                      
                   {"courses":courses,
+                
                    "subjects":subjects})
         
             

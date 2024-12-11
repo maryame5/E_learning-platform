@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
     const createButton = document.querySelector("#create_subject");
     const createcourse = document.querySelector("#create_course_button");
-    const deletebutton= doument.querySelector("#deletebut");
+    const deletebutton= document.querySelector("#deletebut");
     if (deletebutton){
-        deletebutton.addEventListener("click", deleteCourse())}
+        deletebutton.addEventListener("click", deleteCourse)}
     if (createButton) {
         createButton.addEventListener("click", create());}
     if (createcourse) {
@@ -86,7 +86,7 @@ function create_course() {
              method: 'POST',
                  headers: {
                  'Content-Type': 'application/json',
-                 'X-CSRFToken': getCookie('csrftoken') 
+                 
                                   },
                  body: JSON.stringify(payload)
                          })
@@ -117,7 +117,7 @@ function deleteCourse() {
                                             method: 'POST',
                                             headers: {
                                                 'Content-Type': 'application/json',
-                                                'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token for security
+                                                // Include CSRF token for security
                                             },
                                             body: JSON.stringify({
                                                 course_name: course_name,
@@ -133,10 +133,14 @@ function deleteCourse() {
                                             } else {
                                                 // Handle errors
                                                 return response.json()
-                                        .then(data => {
-                                                    alert("Error: " + data.error);
-                                                });
-                                            }
+                                        .then(data => { if (data.error) {
+                                            // Handle error (e.g., display error message)
+                                            console.error(data.error);
+                                        } else {
+                                            // Redirect to the index page
+                                            window.location.href = data.redirect_url;
+                                        }
+                                            })}
                                         })
                                         .catch(error => {
                                             alert("An error occurred: " + error);

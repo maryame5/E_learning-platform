@@ -26,7 +26,7 @@ class Admin(models.Model):
 
 
 class Course(models.Model):
-    course_name = models.CharField(max_length=100)
+    course_name = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     course_content=models.TextField(blank=True)
     course_documents=models.FileField(upload_to='documents/',null=True,blank=True)
@@ -34,7 +34,7 @@ class Course(models.Model):
 
 
 class Subject(models.Model):
-    subject_name = models.CharField(max_length=100)
+    subject_name = models.CharField(max_length=100 ,unique=True)
     subject_description =models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="subject_teacher")
