@@ -83,11 +83,11 @@ def index(request):
             })
         except Teacher.DoesNotExist:
             try:
-                student= Student.objects.get(student_user=user1)
-                courses= Course.objects.filter(student=student)
+                students= Student.objects.get(student_user=user1)
+                subjects= Subject.objects.all()
                 return render(request, "e_learning/index.html",{
-                        "student": student,
-                        "courses": courses,
+                        "student": students,
+                        "subjects": subjects,
                         "message": "You are  a student."})
             except Student.DoesNotExist:
                 try:
@@ -99,6 +99,8 @@ def index(request):
                     })
                 except Admin.DoesNotExist:
                     return render(request, "e_learning/index.html", {
+                        "subjects": Subject.objects.all(),
+
                   "message": "You are a guest."})
     else:
          return render(request, "e_learning/index.html", {
@@ -142,14 +144,62 @@ def create_subject(request):
     
          
     return render(request, "e_learning/create_subject.html")
-
+@csrf_exempt
+@login_required
 def subject(request,name):
+    user=request.user
+    user1=User.objects.get(username=user)
+    teachers=Teacher.objects.all()
+    try:
+        student=Student.objects.get(student_user=user1)
+    except Student.DoesNotExist:
+        student=0
     subject = Subject.objects.get(subject_name=name)
     courses = subject.course.all() 
+    print(student.student_user,user1)
     return render(request, "e_learning/subject.html",{
         "subject": subject,
-        "courses": courses
+        "teachers":teachers,
+        "students":student.student_user,
+        "courses": courses,
+        "user": user1
     })
+
+@login_required
+def enrolling(request,subject)   :
+    if request.method == "POST":
+            #user connected
+            user=request.user
+            user1=User.objects.get(username=user)
+            student = Student.objects.get(student_user=user1)
+            subjects = Subject.objects.get(subject_name=subject)
+            
+            #create relation between the user and the posts he wanna start following
+            try :
+                enroll.objects.get(student=student, subject=subjects)
+            
+            except enroll.DoesNotExist:
+
+                enroll.objects.create(student=student, subject=subjects)
+            return HttpResponseRedirect(reverse('subject', args=[subject]))
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+@login_required
+def unenrolling(request,subject)   :
+    if request.method == "POST":
+            #user connected
+            user=request.user
+            user1=User.objects.get(username=user)
+            student = Student.objects.get(student_user=user1)
+            subjects = Subject.objects.get(subject_name=subject)
+                #create relation between the user and the posts he wanna start following
+            try :
+                enroll.objects.get(student=student, subject=subjects).delete()
+            except enroll.DoesNotExist:
+                message = "you should be enrolling this subject first "
+
+                
+            return HttpResponseRedirect(reverse('subject', args=[subject],))
+    return JsonResponse({"error": "Invalid request method."}, status=405)
 @csrf_exempt
 @login_required
 def create_course(request):

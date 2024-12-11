@@ -7,10 +7,11 @@ class User(AbstractUser):
     pass
     
    
-
 class Student(models.Model):
     student_user = models.OneToOneField(User, on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+  
+
     
     
 class Teacher(models.Model):
@@ -39,4 +40,12 @@ class Subject(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="subject_teacher")
     course= models.ManyToManyField(Course ,related_name="course_subject")
+    enrolled_by = models.ManyToManyField(Student, through='enroll' , through_fields=('subject', 'student'),related_name='enrolled_sub')
 
+class enroll(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="stud")
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name="subje")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('student', 'subject')

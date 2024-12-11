@@ -24,6 +24,26 @@
         </li>
         {% endfor %}
     </p>
+
+    {% if user1 == student %}
+       <div style="display: flex ; margin: 20px;">
+        <form action="{% url 'enrolling' subject.subject_name %}" method="POST" style="margin-right: 50px;">
+            {% csrf_token %}
+           
+            <button type="submit" class="btn btn-outline-danger">enroll</button>
+            </form>
+            <form action="{% url 'unenrolling' subject.subject_name  %}" method="POST">
+
+              {% csrf_token %}
+             
+              <button type="submit" class="btn btn-outline-danger">Unenroll</button>
+              </form>
+        </div>
+    
+    
+        {% endif %}
+
+    
     
     
 
