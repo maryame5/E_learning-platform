@@ -9,20 +9,20 @@
 
 
 </ul>
-<h1> home</h1>
-{% if user.is_authenticated %}
- <h2>{{message}}</h2>
-{% endif %}      
+<h1> Enrolled subject</h1>
+{% if student %}
+
+     
 <div style="display: flex; flex-wrap: wrap;
 align-content: flex-start;
 ">
-    {% for subject in subjects %}
+    {% for subject in enrolled_su %}
     <div id="subject{{subject.id}}" style="border: 1px solid black ; height: 100px;width: 300px; margin: 4px; text-align: center; font-size: 3em;" >
        {{subject.subject_name}}
        <a href="{%url 'subject' subject.subject_name %}" class="btn btn-outline-primary">More... </a>
     </div>
     {% endfor %}
 </div>
-
+{% endif %} 
 
 {% endblock %}

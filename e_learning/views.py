@@ -312,4 +312,21 @@ def delete_course(request):
                 
                    "subjects":subjects})
         
-            
+@login_required          
+def enrolled_subject(request):
+    user=request.user
+    user1=User.objects.get(username=user)
+    try:
+        student=Student.objects.get(student_user=user1)
+    except Student.DoesNotExist:
+        student=0
+
+    enrolled=enroll.objects.filter(student=student)
+    enrolled_su=[]
+    for i in enrolled:
+        enrolled_su.append(i.subject)
+    return render(request,"e_learning/enrolled_subject.html",{
+                  "student":student,
+                  "enrolled_su" :enrolled_su
+                  })
+    

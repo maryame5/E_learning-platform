@@ -17,7 +17,9 @@ urlpatterns = [
     path("delete_course",views.delete_course,name="delete_course"),
     path("course/<str:name>",views.course,name="course"),
     path("enrolling/<str:subject>",views.enrolling,name="enrolling"),
-    path("unenrolling/<str:subject>",views.unenrolling,name="unenrolling")
+    path("unenrolling/<str:subject>",views.unenrolling,name="unenrolling"),
+    path("enrolled_subject",views.enrolled_subject,name="enrolled_subject")
+    
 
 
 ]
