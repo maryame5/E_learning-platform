@@ -382,3 +382,4 @@ def my_subject(request):
     
 def not_authorized(request):
     return render(request,"e_learning/not_authorized.html")
+

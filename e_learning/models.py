@@ -72,5 +72,10 @@ class opened_course(models.Model):
     class Meta:
         unique_together = ('student', 'course')
 
+class comments(models.Model):
+    subject=models.ForeignKey(Subject , on_delete=models.CASCADE, related_name="course_comments")
+    student=models.ForeignKey(Student , on_delete=models.CASCADE, related_name="student_comments")
+    comment=models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 

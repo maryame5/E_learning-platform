@@ -20,7 +20,7 @@ urlpatterns = [
     path("unenrolling/<str:subject>",views.unenrolling,name="unenrolling"),
     path("enrolled_subject",views.enrolled_subject,name="enrolled_subject"),
     path("my_subject/",views.my_subject,name="my_subject"),
-    path("not_authorized/",views.not_authorized,name="not_authorozed"),
+    path("my_subject/not_authorized/",views.not_authorized,name="not_authorozed"),
 
 
 ]
