@@ -6,26 +6,12 @@
 {% endblock %}
 {% block body %}
 
-{% if user.is_authenticated %}
- <h2>{{message}}</h2>
- {% endif %}  
- <h1>view subject : {{subject.subject_name}} </h1>
-    
-<div>
-    <p>Subject name : {{subject.subject_name}}    </p>
-    <p>Description : <br>{{subject.subject_description}}    </p>
-    <p> Teacher : {{subject.teacher.teacher_user}}    </p>
-    <p> created at : {{subject.created_at}}    </p>
-    <p> All courses in this subject :
-       
-        <br>{% for course in courses %}
-        <li>
-        <a href="{% url 'course' course.course_name %}">{{course.course_name}}</a>
-        </li>
-        {% endfor %}
-    </p>
 
-    {% if user1 == student %}
+ 
+
+ <h1>view subject : {{subject.subject_name}} </h1>
+ 
+ {% if userr == student_name %}
        <div style="display: flex ; margin: 20px;">
         <form action="{% url 'enrolling' subject.subject_name %}" method="POST" style="margin-right: 50px;">
             {% csrf_token %}
@@ -39,9 +25,43 @@
               <button type="submit" class="btn btn-outline-danger">Unenroll</button>
               </form>
         </div>
-    
+    {% else %}
+    <label>noooooooooooooooot</label>
     
         {% endif %}
+    
+<div style="margin: 50px; font: 2em ;;">
+    <p>Subject name : {{subject.subject_name}}    </p>
+    <p>Description : <br>{{subject.subject_description}}    </p>
+    <p> Teacher : {{subject.teacher.teacher_user}}    </p>
+    <p> created at : {{subject.created_at}}    </p>
+    <p> All courses in this subject :
+       
+        <br>
+        <div style="display: flex;">{% for course in courses %}
+            {% if course.is_open %}
+            <div class="course" id="{{ course.course_name }}" style="border: solid 1px black; width: 300px; height: 200px; font-size: 2em; margin: 4px; text-align: center; background-color: grey;">
+                <strong>{{ course.course_name }}</strong>
+                <br>
+                <span class="status">
+                    
+                        <span style="color: green;">Opened</span>
+                    {% else %}
+                    <div class="course" id="{{ course.course_name }}" style="border: solid 1px black; width: 300px; height: 200px; font-size: 2em; margin: 4px; text-align: center; background-color: rgb(235, 211, 211);">
+                        <strong>{{ course.course_name }}</strong>
+                        <br>
+                        <span class="status">
+                        
+                    {% endif %}
+                </span>
+                <br>
+                <a href="{% url 'course' course.course_name %}" id="{{ course.course_name }}" class="btn btn-outline-primary" style="position: relative; margin-bottom: -100px;">Open This Course</a>
+            </div>
+    
+        {% endfor %}</div>
+    </p>
+
+    
 
     
     

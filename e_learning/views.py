@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .models import *
+from django.contrib.auth.models import  Group
 from django.views.decorators.csrf import csrf_protect
 
 def login_view(request):
@@ -55,10 +56,18 @@ def register(request):
             user.save()
             if type == "student":
                 Student.objects.create(student_user=user).save()
+                student_group, created = Group.objects.get_or_create(name='Teachers')
+                user.groups.add(student_group)
             elif type == "teacher":
                 Teacher.objects.create(teacher_user=user).save()
+                teacher_group, created = Group.objects.get_or_create(name='Teachers')
+                user.groups.add(teacher_group)
             elif type == "admin":
                 Admin.objects.create(admin_user=user).save()
+                teacher_group, created = Group.objects.get_or_create(name='Teachers')
+                student_group, created = Group.objects.get_or_create(name='Teachers')
+                user.groups.add(teacher_group)
+                user.groups.add(student_group)
             
         except IntegrityError:
             return render(request, "e_learning/register.html", {
@@ -75,7 +84,7 @@ def index(request):
         user1= User.objects.get(username=user.username)
         try:
             teacher= Teacher.objects.get(teacher_user=user1)
-            subjects= Subject.objects.filter(teacher=teacher)
+            subjects= Subject.objects.all()
             return render(request, "e_learning/index.html",{
                 "teacher": teacher,
                 "subjects": subjects,
@@ -92,8 +101,11 @@ def index(request):
             except Student.DoesNotExist:
                 try:
                     admin= Admin.objects.get(admin_user=user1)
+                    subjects= Subject.objects.all()
+
                     return render(request, "e_learning/index.html",{
                         "admin": admin,
+                        "subjects": subjects,
                         "message": "You are  a admin."
 
                     })
@@ -106,9 +118,6 @@ def index(request):
          return render(request, "e_learning/index.html", {
                         "message": "Please log in to access this page."
           })
-    
-
-
 def profil(request):
     return render(request,"e_learning/index.html")
 
@@ -131,10 +140,7 @@ def create_subject(request):
                 return JsonResponse("Description is required", status=400)
             subject = Subject.objects.create(subject_name=name , subject_description=description,teacher=teacher)
             subject.save()
-            return JsonResponse({
-                "message": "Subject created successfully.",
-                "redirect_url": reverse("index")  # Include the URL to redirect to
-            }, status=201)
+            return HttpResponseRedirect(reverse("index"))
 
         
         except json.JSONDecodeError:
@@ -144,7 +150,7 @@ def create_subject(request):
     
          
     return render(request, "e_learning/create_subject.html")
-@csrf_exempt
+
 @login_required
 def subject(request,name):
     user=request.user
@@ -152,17 +158,27 @@ def subject(request,name):
     teachers=Teacher.objects.all()
     try:
         student=Student.objects.get(student_user=user1)
+        student_user=student.student_user
+        student_name=student_user.username
     except Student.DoesNotExist:
         student=0
+        student_name=0
     subject = Subject.objects.get(subject_name=name)
     courses = subject.course.all() 
-    print(student.student_user,user1)
+    print(user,student_name)
+    opened_courses = opened_course.objects.filter(student__student_user=user).values_list('course', flat=True)
+    for course in courses:
+         course.is_open = course.id in opened_courses 
+                    
+
+
     return render(request, "e_learning/subject.html",{
         "subject": subject,
         "teachers":teachers,
-        "students":student.student_user,
+        "student_name":student_name,
         "courses": courses,
-        "user": user1
+        "userr": user.username,
+        
     })
 
 @login_required
@@ -243,15 +259,36 @@ def create_course(request):
     return render(request, "e_learning/create_course.html",{
         "subjects":subjects
     })
-
+@csrf_exempt
+@login_required
 def course(request,name):
+    
     course = Course.objects.get(course_name=name)
     subject = Subject.objects.get(course=course)
-    return render(request, "e_learning/course.html",{"course":course,
+    if request.method=="GET":
+         return render(request, "e_learning/course.html",{"course":course,
                                                      "subject":subject})
-
+    elif request.method=="PUT":
+        data = json.loads(request.body)
+        user=User.objects.get(username=request.user)
+        if data.get("is_open") is not None:
+            if data["is_open"] is True:
+                try :
+                     student = Student.objects.get(student_user=user)
+                     try:
+                         opened=opened_course.objects.get(student=student,course=course)
+                         return JsonResponse({"message": "Course already opened"}, status=400)
+                     except opened_course.DoesNotExist:
+                            opened= opened_course.objects.create(student=student,course=course)
+                            opened.save()
+                            return JsonResponse({"message": "Course opened"}, status=200)
+                except Student.DoesNotExist:
+                    return HttpResponse({"message": "You are not a student"}, status=400)
+                         
+                         
+        
+@csrf_exempt 
 @login_required
-@csrf_protect
 def delete_course(request):
     creator=request.user
     user= User.objects.get(username=creator)
@@ -265,8 +302,9 @@ def delete_course(request):
              for subject in subjects:
                   for course1 in subject.course.all():
                      courses.append(course1)
-             course_name = request.POST.get("course_name")
-             subject_name=request.POST.get("subject_name")
+             data=json.loads(request.body)
+             course_name = data.get("course_name")
+             subject_name=data.get("subject_name")
              course = Course.objects.get(course_name=course_name)
              subject=Subject.objects.get(subject_name=subject_name)
              if course not in subject.course.all():
@@ -329,4 +367,18 @@ def enrolled_subject(request):
                   "student":student,
                   "enrolled_su" :enrolled_su
                   })
+@login_required
+def my_subject(request):
+    user=request.user
+    user1=User.objects.get(username=user)
+    try :
+        teacher=Teacher.objects.get(teacher_user=user1)
+        subjects= Subject.objects.filter(teacher=teacher)
+        return render (request,"e_learning/my_subject.html",{
+            "subjects":subjects,
+        })
+    except Teacher.DoesNotExist:
+       return HttpResponseRedirect('not_authorized')
     
+def not_authorized(request):
+    return render(request,"e_learning/not_authorized.html")

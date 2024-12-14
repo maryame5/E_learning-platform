@@ -32,7 +32,20 @@ class Course(models.Model):
     course_content=models.TextField(blank=True)
     course_documents=models.FileField(upload_to='documents/',null=True,blank=True)
     course_image=models.ImageField(upload_to='img/',null=True,blank=True)
-
+    is_open=models.BooleanField(default=False)
+    def serialize(self):
+        return {
+            "id": self.id,
+            "course_name": self.course_name,
+            "course_content": self.course_content,
+            "course_documents": self.course_documents,
+            "course_image": self.course_image,
+            "created_at": self.created_at.strftime("%b %d %Y, %I:%M %p"),
+            "is_open": self.is_open,
+           
+        }
+    
+    
 
 class Subject(models.Model):
     subject_name = models.CharField(max_length=100 ,unique=True)
@@ -49,3 +62,15 @@ class enroll(models.Model):
 
     class Meta:
         unique_together = ('student', 'subject')
+
+class opened_course(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="course_opened")
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="student")
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_open=models.BooleanField(default=False)
+   
+    class Meta:
+        unique_together = ('student', 'course')
+
+
+

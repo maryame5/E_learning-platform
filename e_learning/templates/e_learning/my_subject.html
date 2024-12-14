@@ -9,20 +9,18 @@
 
 
 </ul>
-<h1> Enrolled subject</h1>
-{% if student %}
-
-     
+<h1> My subjects</h1>
+    
 <div style="display: flex; flex-wrap: wrap;
 align-content: flex-start;
 ">
-    {% for subject in enrolled_su %}
+    {% for subject in subjects %}
     <div id="subject{{subject.id}}" style="border: 1px solid black ; height: 100px;width: 300px; margin: 4px; text-align: center; font-size: 3em;" >
        {{subject.subject_name}}
        <a href="{%url 'subject' subject.subject_name %}" class="btn btn-outline-primary">More... </a>
     </div>
     {% endfor %}
 </div>
-{% endif %} 
+
 
 {% endblock %}

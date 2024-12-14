@@ -1,0 +1,21 @@
+{% extends "e_learning/layout.html" %}
+{% load static %}
+
+{% block script %}
+<script src="{% static 'e_learning/index.js' %}"></script>
+{% endblock %}
+{% block body %}
+<div style="font-family: Arial, sans-serif;
+background-color: #f4f4f4;
+color: #333;
+text-align: center;
+padding: 50px;">
+<h1 style="color: #e74c3c; ">Access Denied</h1>
+    <p style="font-size: 18px;">You do not have permission to view this page.</p>
+    <a href="{% url 'index' %}" style="text-decoration: none;
+    color: #3498db; /* Blue color for links */
+    font-weight: bold; ">Return to Home</a> 
+
+</div>
+
+{% endblock %}

@@ -2,12 +2,16 @@ document.addEventListener("DOMContentLoaded", function() {
     const createButton = document.querySelector("#create_subject");
     const createcourse = document.querySelector("#create_course_button");
     const deletebutton= document.querySelector("#deletebut");
+    document.querySelectorAll('.btn-outline-primary').forEach(button => {
+        button.addEventListener('click', open_course);
+    });
     if (deletebutton){
         deletebutton.addEventListener("click", deleteCourse)}
     if (createButton) {
         createButton.addEventListener("click", create());}
     if (createcourse) {
         createcourse.addEventListener("click", create_course());}
+    
    });
 
 function create(event) {
@@ -29,7 +33,7 @@ function create(event) {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken') 
+                
                
             },
               body: JSON.stringify(payload)
@@ -45,20 +49,7 @@ function create(event) {
                 console.error("There was a problem with the fetch operation:", error);
             });
                 };}
-function getCookie(name) {
-                    let cookieValue = null;
-                    if (document.cookie && document.cookie !== '') {
-                        const cookies = document.cookie.split(';');
-                        for (let i = 0; i < cookies.length; i++) {
-                            const cookie = cookies[i].trim();
-                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                break;
-                            }
-                        }
-                    }
-                    return cookieValue;
-                }
+
 
 function create_course() {
     document.querySelector('form').onsubmit = function(event) {
@@ -112,34 +103,28 @@ function deleteCourse() {
             const confirmed = confirm("Are you sure you want to delete this course?");
                                     
             if (confirmed) {
-                                        // If confirmed, send the delete request
-                                        fetch('/delete_course', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                                // Include CSRF token for security
-                                            },
-                                            body: JSON.stringify({
-                                                course_name: course_name,
-                                                subject_name: subject_name
-                                            })
-                                        })
-                                        .then(response => {
-                                            if (response.ok) {
+                
+                fetch('/delete_course', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json', },
+                     body: JSON.stringify({
+                            course_name: course_name,
+                            subject_name: subject_name }) })
+                .then(response => {
+                    if (response.ok) {
                                                 // If the response is OK, show success alert
-                                                alert("Course deleted successfully.");
+                     alert("Course deleted successfully.");
                                                 // Optionally, you can refresh the page or remove the course element from the DOM
                                                 // Reload the page to reflect changes
-                                            } else {
+                     } else {
                                                 // Handle errors
-                                                return response.json()
-                                        .then(data => { if (data.error) {
+                        return response.json()
+                 .then(data => { if (data.error) {
                                             // Handle error (e.g., display error message)
-                                            console.error(data.error);
-                                        } else {
-                                            // Redirect to the index page
-                                            window.location.href = data.redirect_url;
-                                        }
+                      console.log(data.error);
+                }
+                                        
                                             })}
                                         })
                                         .catch(error => {
@@ -147,3 +132,30 @@ function deleteCourse() {
                                         });
                                     }
                                 }}
+ function open_course(event) {
+    let course_name = event.target.id;
+    console.log("Course Name:", course_name); 
+    const course_element  = event.target.closest('.course');
+    if (!course_element) {
+        console.error("Course element not found.");
+        return;
+    }
+                                    
+  fetch(`/course/${course_name}`, {
+    method: 'PUT',
+    headers: {
+            'Content-Type': 'application/json',  
+        },
+    body: JSON.stringify({
+    is_open: true
+      })})
+    .then(() => {
+      console.log("open");}) 
+    .catch(error => {
+        console.log("There was a problem with the fetch operation:", error);
+
+    });}
+                                
+                                
+                                
+                                
