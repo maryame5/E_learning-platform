@@ -10,6 +10,7 @@ class User(AbstractUser):
 class Student(models.Model):
     student_user = models.OneToOneField(User, on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    profil_img=models.ImageField(upload_to='img_profile/',blank=True, default='images/default_profile.png')
   
 
     
@@ -18,12 +19,14 @@ class Teacher(models.Model):
     teacher_user = models.OneToOneField(User, on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     students = models.ManyToManyField(Student,related_name="is_student")
+    profil_img=models.ImageField(upload_to='img_profile/',blank=True, default='images/default_profile.png')
 
 
 class Admin(models.Model):
     admin_user = models.OneToOneField(User, on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     staff = models.ManyToManyField(Teacher,related_name="is_staff")
+    profil_img=models.ImageField(upload_to='img_profile/',blank=True, default='images/default_profile.png')
 
 
 class Course(models.Model):

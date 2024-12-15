@@ -88,12 +88,14 @@ def index(request):
             return render(request, "e_learning/index.html",{
                 "teacher": teacher,
                 "subjects": subjects,
-                "message": "You are  a teacher."
+                 "message": "You are  a teacher."
+               
             })
         except Teacher.DoesNotExist:
             try:
                 students= Student.objects.get(student_user=user1)
                 subjects= Subject.objects.all()
+
                 return render(request, "e_learning/index.html",{
                         "student": students,
                         "subjects": subjects,
@@ -119,7 +121,67 @@ def index(request):
                         "message": "Please log in to access this page."
           })
 def profil(request):
-    return render(request,"e_learning/index.html")
+    user=request.user
+    userr= User.objects.get(username=user.username)
+    try:
+        student=Student.objects.get(student_user=userr)
+        print(student.profil_img)
+        return render(request, "e_learning/profil.html", {
+            "userr": userr,
+            "n":student.student_user,
+            "img":student.profil_img,
+            "message": "You are  a student.",
+
+            })
+    except Student.DoesNotExist:
+        try:
+            teacher=Teacher.objects.get(teacher_user=userr)
+            subjects= Subject.objects.filter(teacher=teacher)
+            enrolle={}
+            for s in subjects:
+                enrolle[s.subject_name]=enroll.objects.filter(subject=s).count()
+            enrolled=json.dumps(enrolle)
+            print(enrolled)
+           
+                
+            return render(request, "e_learning/profil.html", {
+                "p": teacher,
+                "userr": userr,
+                "n":teacher.teacher_user,
+                "img":teacher.profil_img,
+                 "message": "You are  a teacher.",
+                 "enrolled":enrolled,
+                 
+
+                
+                })
+        except Teacher.DoesNotExist:
+            try:
+                admin=Admin.objects.get(admin_user=userr)
+                teacher=Teacher.objects.all()
+                subjects=Subject.objects.all()
+                enrolle={}
+                for s in subjects:
+                      enrolle[s.subject_name]=enroll.objects.filter(subject=s).count()
+                enrolled=json.dumps(enrolle)
+                print(enrolled)
+                return render(request, "e_learning/profil.html", {
+                    "n":admin.admin_user,
+                    "userr": userr,
+                    "img":admin.profil_img,
+                    "message": "You are  a admin.",
+                     "enrolled":enrolled,
+                    })
+            except Admin.DoesNotExist:
+                return render(request, "e_learning/profil.html", {
+                    "message": "You are a guest."})
+            
+            
+
+
+
+
+    return render(request,"e_learning/profil.html")
 
 @csrf_exempt
 @login_required
@@ -408,5 +470,5 @@ def comment(request):
              return JsonResponse({'success': True, 'message': 'Comment added successfully.'})
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
-        
+     
 

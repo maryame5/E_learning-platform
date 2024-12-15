@@ -1,0 +1,38 @@
+{% extends "e_learning/layout.html" %}
+{% load static %}
+
+{% block script %}
+<script src="{% static 'e_learning/index.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Profil Page</h1>
+            <div  class="profile-header" >
+                <img src="{{ img.url }}"  class="rounded-circle" alt="Profile Image" >
+                <div class="profile-info"  >
+                <p>Name :<b>{{userr.username }}</b> </p>
+               <p>  Email:<b> {{ user.email }}</b></p>
+               <p> Bio: <b> {{message}}</b></p>
+            </div>
+
+            </div>
+    </div>
+</div>
+</div>
+<div class="static"> </div>
+
+
+
+<h2>Enrollment Chart</h2>
+<input type="hidden" id="nams" value="{{enrolled}}">
+
+<canvas id="enrollmentChart" width="400" height="200"></canvas>
+
+
+
+
+
+{% endblock %}

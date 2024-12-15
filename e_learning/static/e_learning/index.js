@@ -17,8 +17,57 @@ document.addEventListener("DOMContentLoaded", function() {
     if(commentt){
         commentt.addEventListener("click",comments())
     }
+    const subjectDat = document.querySelector("#nams").value;
+    const subjectData = JSON.parse(subjectDat);
+
+    // Prepare data for the enrollment chart
+    const enrollmentLabels = Object.keys(subjectData);
+    const enrollmentValues = Object.values(subjectData);
+    console.log(subjectData);
+    console.log("111111111",enrollmentLabels);
+    console.log("2222222222", enrollmentValues);
     
-   });
+
+    // Create the enrollment chart
+        const enrollmentCtx = document.querySelector('#enrollmentChart');
+        if (!enrollmentCtx) {
+            console.error("Canvas element not found!");
+            return; // Exit if the canvas is not found
+        }
+
+        // Get the 2D context
+        const ctx = enrollmentCtx.getContext('2d');
+        if (!ctx) {
+            console.error("Failed to get canvas context!");
+            return; // Exit if the context is not available
+        }
+
+
+    new Chart(enrollmentCtx, {
+        type: 'bar', // You can change this to 'line', 'pie', etc.
+        data: {
+            labels: enrollmentLabels,
+            datasets: [{
+                label: 'Number of Students Enrolled',
+                data: enrollmentValues,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+});
+
+
+    
+ 
 
 function create(event) {
     document.querySelector('form').onsubmit = function(event) {
@@ -187,6 +236,7 @@ function comments(){
                     return response.json();})
                 .then(commen => {
                      console.log("commen", commen);
+
                     })
                 .catch(error => {
                       console.log( error)})
