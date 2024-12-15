@@ -262,11 +262,19 @@ def create_course(request):
 @csrf_exempt
 @login_required
 def course(request,name):
+    user=request.user
+    
     
     course = Course.objects.get(course_name=name)
     subject = Subject.objects.get(course=course)
+    commentss=comments.objects.filter(course=course)
+   
+
     if request.method=="GET":
          return render(request, "e_learning/course.html",{"course":course,
+                                                          "userr":user.username,
+                                                          "commentss":commentss,
+                                                          
                                                      "subject":subject})
     elif request.method=="PUT":
         data = json.loads(request.body)
@@ -382,4 +390,23 @@ def my_subject(request):
     
 def not_authorized(request):
     return render(request,"e_learning/not_authorized.html")
+@csrf_exempt
+@login_required
+def comment(request):
+    if request.method == 'POST': 
+        data = json.loads(request.body)
+        cours= data.get('course_name')
+        course=Course.objects.get(course_name=cours)
+
+        commen = data.get('commen')
+        if not commen:
+            return JsonResponse({'error': 'Comment cannot be empty.'}, status=400)
+        else:
+             user = request.user
+             user1=User.objects.get(username=user)
+             comments.objects.create(course=course,user=user1,comment=commen).save()
+             return JsonResponse({'success': True, 'message': 'Comment added successfully.'})
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+        
 

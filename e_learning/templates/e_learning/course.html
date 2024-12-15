@@ -26,11 +26,34 @@
     <iframe src="{{ course.course_documents.url }}" style="width: 90%; height: 600px; border: solid 1px black;" allowfullscreen></iframe>
 {% else %}
     <p>No document available.</p>
-    {% endif %}
-   
-    
-
+{% endif %}
 </div>
+<div class="form-floating">
+    <form  method="post">
+        {% csrf_token %}
+        <input type="text" class="form-control" id ="comment" placeholder="Leave a comment here" name="comment" required >
+        <input type="hidden" id="course_name" value="{{ course.course_name }}">
+        <input type ="hidden" id = "userr" value="{{userr}}">
 
+        <br>
+        <button  class="btn btn-outline-secondary" id="commentt" type="submit">add comment</button>
+    </form> 
+    </div><br><br>
+
+    <div class="commentelement"> 
+        <h2>Comments</h2>
+    <ul>
+    {% for c in commentss %}
+        <li>
+            <strong>{{ c.user.username }}</strong>: {{ c.comment}} <br>
+            <small>Posted on: {{ c.created_at|date:"F j, Y, g:i a" }}</small>
+        </li>
+    {% empty %}
+        <li>No comments yet.</li>
+    {% endfor %}
+    </ul>
+       
+
+    </div>
 
 {% endblock %}

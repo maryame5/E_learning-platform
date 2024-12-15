@@ -21,6 +21,7 @@ urlpatterns = [
     path("enrolled_subject",views.enrolled_subject,name="enrolled_subject"),
     path("my_subject/",views.my_subject,name="my_subject"),
     path("my_subject/not_authorized/",views.not_authorized,name="not_authorozed"),
+    path("comment",views.comment,name="comment")
 
 
 ]

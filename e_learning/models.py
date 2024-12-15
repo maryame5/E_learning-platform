@@ -73,9 +73,11 @@ class opened_course(models.Model):
         unique_together = ('student', 'course')
 
 class comments(models.Model):
-    subject=models.ForeignKey(Subject , on_delete=models.CASCADE, related_name="course_comments")
-    student=models.ForeignKey(Student , on_delete=models.CASCADE, related_name="student_comments")
-    comment=models.TextField()
+    course=models.ForeignKey(Course , on_delete=models.CASCADE, related_name="course_comments")
+    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name="student_comments")
+    comment=models.TextField(blank=False,null=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        ordering = ['-created_at']
 
 

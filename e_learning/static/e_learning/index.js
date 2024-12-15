@@ -2,15 +2,21 @@ document.addEventListener("DOMContentLoaded", function() {
     const createButton = document.querySelector("#create_subject");
     const createcourse = document.querySelector("#create_course_button");
     const deletebutton= document.querySelector("#deletebut");
+    const commentt=document.querySelector("#commentt");
     document.querySelectorAll('.btn-outline-primary').forEach(button => {
         button.addEventListener('click', open_course);
+
     });
+    
     if (deletebutton){
         deletebutton.addEventListener("click", deleteCourse)}
     if (createButton) {
         createButton.addEventListener("click", create());}
     if (createcourse) {
         createcourse.addEventListener("click", create_course());}
+    if(commentt){
+        commentt.addEventListener("click",comments())
+    }
     
    });
 
@@ -158,4 +164,30 @@ function deleteCourse() {
                                 
                                 
                                 
-                                
+function comments(){
+    document.querySelector('form').onsubmit = function(event) {
+        event.preventDefault();
+        const course_name = document.querySelector('#course_name').value;
+        const commen = document.querySelector("#comment").value;
+        const user_name = document.querySelector('#userr').value;
+        fetch("/comment", {
+        
+                     method: 'post',
+                     headers: {
+                          'Content-Type': 'application/json'},
+                     body: JSON.stringify({
+                           course_name:course_name,
+                           commen:commen,
+                           user:user_name
+                           }) })
+                .then(response =>  {
+                     if (!response.ok){
+                        console.log("Response status:", response.status);
+                         throw new Error('Network response was not ok')}
+                    return response.json();})
+                .then(commen => {
+                     console.log("commen", commen);
+                    })
+                .catch(error => {
+                      console.log( error)})
+}}            
