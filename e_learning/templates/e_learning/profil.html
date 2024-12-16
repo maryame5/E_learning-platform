@@ -13,12 +13,19 @@
             <div  class="profile-header" >
                 <img src="{{ img.url }}"  class="rounded-circle" alt="Profile Image" >
                 <div class="profile-info"  >
-                <p>Name :<b>{{userr.username }}</b> </p>
-               <p>  Email:<b> {{ user.email }}</b></p>
+                <p>Name :<b>{{n.username }}</b> </p>
+               <p>  Email:<b> {{ n.email }}</b></p>
                <p> Bio: <b> {{message}}</b></p>
             </div>
 
             </div>
+            
+             <form action="{% url 'editprofile' n.username %}" style="margin-right: 50px;">
+                {% csrf_token %}
+               
+                <button type="submit" class="btn btn-outline-danger">Edit profil</button>
+                </form>
+            
     </div>
 </div>
 </div>
@@ -26,7 +33,7 @@
 
 
 
-<h2>Enrollment Chart</h2>
+
 <input type="hidden" id="nams" value="{{enrolled}}">
 
 <canvas id="enrollmentChart" width="400" height="200"></canvas>

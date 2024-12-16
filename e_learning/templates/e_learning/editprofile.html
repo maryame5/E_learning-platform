@@ -1,0 +1,30 @@
+{% extends "e_learning/layout.html" %}
+{% load static %}
+
+{% block script %}
+<script src="{% static 'e_learning/index.js' %}"></script>
+{% endblock %}
+{% block body %}
+
+<h1> Edit profile</h1>
+
+
+<div>
+    <form action="{% url 'editprofile' user2.username %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="{{ user2.username }}" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ user2.email }}" required>
+
+       
+
+        <label for="image">Profile Image:</label>
+        <input type="file" id="image" name="image">
+
+        <button type="submit">Update Profile</button>
+    </form></div>
+
+
+{% endblock %}

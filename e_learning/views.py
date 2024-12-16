@@ -469,6 +469,57 @@ def comment(request):
              comments.objects.create(course=course,user=user1,comment=commen).save()
              return JsonResponse({'success': True, 'message': 'Comment added successfully.'})
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
+@csrf_exempt
+@login_required
+def editprofile(request,name):
+    user=request.user
+    user1=User.objects.get(username=user)
+    user2=User.objects.get(username=name)
+    print(user2.id)
+    print(user1.id)
+    if user1 != user2 :
+         return render(request,"e_learning/not_authorized.html")
 
-     
-
+    if request.method == 'POST':
+            username=request.POST.get('username')
+            email=request.POST.get('email')
+            image=request.FILES.get('image')
+            try:
+                s=Student.objects.get(student_user=user2.id)
+                s.student_user.username = username
+                s.student_user.email = email
+                if image:
+                    s.profil_img=image
+                s.student_user.save()
+                s.save()
+                return HttpResponse({ 'message': 'Profile updated successfully.'})
+            except Student.DoesNotExist:
+                try:
+                    t=Teacher.objects.get(teacher_user=user2.id)
+                    t.teacher_user.username = username
+                    t.teacher_user.email = email
+                    if image:
+                        t.profil_img=image
+                    
+                    t.save()
+                    return HttpResponse({'success': True, 'message': 'Profile updated successfully.'})
+                except Teacher.DoesNotExist:
+                    try:
+                        a=Admin.objects.get(admin_user=user2.id)
+                        a.admin_user.username = username
+                        a.admin_user.email = email
+                        if image:
+                            a.profil_img=image
+                            a.admin_user.save()
+                            a.save()
+                            return HttpResponse({'success': True, 'message': 'Profile updated successfully.'})
+                    except Admin.DoesNotExist:
+                        return HttpResponse({'error': 'Invalid user.'}, status=400)
+                        
+    else:
+        return render(request,"e_learning/editprofile.html",{
+                "userr":request.user,
+                "user2":user2
+            })
+   
+       
