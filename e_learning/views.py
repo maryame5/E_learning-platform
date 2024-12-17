@@ -79,47 +79,12 @@ def register(request):
         return render(request, "e_learning/register.html")
 
 def index(request):
-    user= request.user
-    if user.is_authenticated:
-        user1= User.objects.get(username=user.username)
-        try:
-            teacher= Teacher.objects.get(teacher_user=user1)
-            subjects= Subject.objects.all()
-            return render(request, "e_learning/index.html",{
-                "teacher": teacher,
-                "subjects": subjects,
-                 "message": "You are  a teacher."
+    subjects= Subject.objects.all()
+    return render(request, "e_learning/index.html",{
                
-            })
-        except Teacher.DoesNotExist:
-            try:
-                students= Student.objects.get(student_user=user1)
-                subjects= Subject.objects.all()
-
-                return render(request, "e_learning/index.html",{
-                        "student": students,
-                        "subjects": subjects,
-                        "message": "You are  a student."})
-            except Student.DoesNotExist:
-                try:
-                    admin= Admin.objects.get(admin_user=user1)
-                    subjects= Subject.objects.all()
-
-                    return render(request, "e_learning/index.html",{
-                        "admin": admin,
-                        "subjects": subjects,
-                        "message": "You are  a admin."
-
-                    })
-                except Admin.DoesNotExist:
-                    return render(request, "e_learning/index.html", {
-                        "subjects": Subject.objects.all(),
-
-                  "message": "You are a guest."})
-    else:
-         return render(request, "e_learning/index.html", {
-                        "message": "Please log in to access this page."
-          })
+                "subjects": subjects, })
+         
+@login_required
 def profil(request):
     user=request.user
     userr= User.objects.get(username=user.username)
@@ -184,12 +149,7 @@ def profil(request):
                 return render(request, "e_learning/profil.html", {
                     "message": "You are a guest."})
             
-            
 
-
-
-
-    return render(request,"e_learning/profil.html")
 
 @csrf_exempt
 @login_required
@@ -199,18 +159,22 @@ def create_subject(request):
             data = json.loads(request.body)
             creator = data.get("teacher")
             user= User.objects.get(username=creator)
-            teacher = Teacher.objects.get(teacher_user=user)
-            name= data.get("name")
-            description= data.get("description")
-            print(f"Received data: {data}")
+            try:
+                 teacher = Teacher.objects.get(teacher_user=user)
+                 name= data.get("name")
+                 description= data.get("description")
+                 print(f"Received data: {data}")
 
-            if not name :
-                return JsonResponse({"Name is required"}, status=400)
-            if not description :
-                return JsonResponse("Description is required", status=400)
-            subject = Subject.objects.create(subject_name=name , subject_description=description,teacher=teacher)
-            subject.save()
-            return HttpResponseRedirect(reverse("index"))
+                 if not name :
+                     return JsonResponse({"Name is required"}, status=400)
+                 if not description :
+                      return JsonResponse("Description is required", status=400)
+                 subject = Subject.objects.create(subject_name=name , subject_description=description,teacher=teacher)
+                 subject.save()
+                 return HttpResponseRedirect(reverse("index"))
+            except Teacher.DoesNotExist:
+                return render(request, "e_learning/not_authorized.html")
+
 
         
         except json.JSONDecodeError:
@@ -254,13 +218,12 @@ def subject(request,name):
 @login_required
 def enrolling(request,subject)   :
     if request.method == "POST":
-            #user connected
+            
             user=request.user
             user1=User.objects.get(username=user)
             student = Student.objects.get(student_user=user1)
             subjects = Subject.objects.get(subject_name=subject)
             
-            #create relation between the user and the posts he wanna start following
             try :
                 enroll.objects.get(student=student, subject=subjects)
             
@@ -272,7 +235,7 @@ def enrolling(request,subject)   :
 @login_required
 def unenrolling(request,subject)   :
     if request.method == "POST":
-            #user connected
+         
             user=request.user
             user1=User.objects.get(username=user)
             student = Student.objects.get(student_user=user1)
