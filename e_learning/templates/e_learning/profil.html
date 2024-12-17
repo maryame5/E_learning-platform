@@ -38,6 +38,23 @@
 
 <canvas id="enrollmentChart" width="400" height="200"></canvas>
 
+{% if courses %}
+<div style="display: flex;">
+{% for course in courses %}
+<div class="course" id="{{ course.course_name }}" style="border: solid 1px black; width: 300px; height: 200px; font-size: 2em; margin: 4px; text-align: center; background-color: grey;">
+    <strong>{{ course.course_name }}</strong>
+    <br>
+    <span class="status">
+        
+            <span style="color: green;">Opened</span>
+        </span>
+        <br>
+        <a href="{% url 'course' course.course_name %}" id="{{ course.course_name }}" class="btn btn-outline-primary" style="position: relative; margin-bottom: -100px;">Open This Course</a>
+    </div>
+{% endfor %}</div>
+{% endif %}
+
+
 
 
 

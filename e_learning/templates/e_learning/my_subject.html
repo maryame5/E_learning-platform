@@ -15,8 +15,9 @@
 align-content: flex-start;
 ">
     {% for subject in subjects %}
-    <div id="subject{{subject.id}}" style="border: 1px solid black ; height: 100px;width: 300px; margin: 4px; text-align: center; font-size: 3em;" >
+    <div id="subject{{subject.id}}" style="border: 1px solid black ; height: 150px;width: 300px; margin: 4px; text-align: center; font-size: 3em;" >
        {{subject.subject_name}}
+       <br>
        <a href="{%url 'subject' subject.subject_name %}" class="btn btn-outline-primary">More... </a>
     </div>
     {% endfor %}

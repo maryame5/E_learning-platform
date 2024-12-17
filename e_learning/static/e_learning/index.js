@@ -234,8 +234,15 @@ function comments(){
                         console.log("Response status:", response.status);
                          throw new Error('Network response was not ok')}
                     return response.json();})
-                .then(commen => {
-                     console.log("commen", commen);
+                .then(comment => {
+                     console.log("commen", comment);
+                     document.querySelector('#comment').value = '';
+                     const newComment = document.createElement("li");
+                     newComment.innerHTML = `<strong>${user_name}</strong>: ${commen} <br>
+                                             <small>Posted on: ${new Date().toLocaleString()}</small>`;
+                     
+                     // Append the new comment to the comments list
+                     document.querySelector("#commenttt").appendChild(newComment);
 
                     })
                 .catch(error => {

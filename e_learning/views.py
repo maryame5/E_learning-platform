@@ -125,12 +125,20 @@ def profil(request):
     userr= User.objects.get(username=user.username)
     try:
         student=Student.objects.get(student_user=userr)
+        open_courses=opened_course.objects.filter(student=student)
+        
+        print(student)
+        courses=[]
+        for c in open_courses:
+            print (c.course)
+            courses.append(c.course)
         print(student.profil_img)
         return render(request, "e_learning/profil.html", {
             "userr": userr,
             "n":student.student_user,
             "img":student.profil_img,
             "message": "You are  a student.",
+            "courses":courses
 
             })
     except Student.DoesNotExist:
@@ -486,33 +494,33 @@ def editprofile(request,name):
             image=request.FILES.get('image')
             try:
                 s=Student.objects.get(student_user=user2.id)
-                s.student_user.username = username
-                s.student_user.email = email
+                user2.username = username
+                user2.email = email
                 if image:
                     s.profil_img=image
-                s.student_user.save()
+                user2.save()
                 s.save()
-                return HttpResponse({ 'message': 'Profile updated successfully.'})
+                return HttpResponseRedirect(reverse('profil'))
             except Student.DoesNotExist:
                 try:
                     t=Teacher.objects.get(teacher_user=user2.id)
-                    t.teacher_user.username = username
-                    t.teacher_user.email = email
+                    user2.username = username
+                    user2.email = email
                     if image:
                         t.profil_img=image
-                    
+                    user2.save()
                     t.save()
-                    return HttpResponse({'success': True, 'message': 'Profile updated successfully.'})
+                    return HttpResponseRedirect(reverse('profil'))
                 except Teacher.DoesNotExist:
                     try:
                         a=Admin.objects.get(admin_user=user2.id)
-                        a.admin_user.username = username
-                        a.admin_user.email = email
+                        user2.username = username
+                        user2.email = email
                         if image:
                             a.profil_img=image
-                            a.admin_user.save()
-                            a.save()
-                            return HttpResponse({'success': True, 'message': 'Profile updated successfully.'})
+                        user2.save()
+                        a.save()
+                        return HttpResponseRedirect(reverse('profil'))
                     except Admin.DoesNotExist:
                         return HttpResponse({'error': 'Invalid user.'}, status=400)
                         

@@ -8,7 +8,7 @@
     {% csrf_token %}
     <input id ="teacher" name ="teacher" value="{{ request.user }}" hidden>
     <label for="subject_name">Choose a subject:</label>
-    <select id="subject_name" name="subject_name"required>
+    <select class="form-select form-select-lg mb-3" aria-label="Large select example"  id="subject_name" name="subject_name"required>
         {% for subject in subjects %}
         
       <option value="{{subject.subject_name}}">{{subject.subject_name}}</option>
@@ -17,16 +17,19 @@
     </select>
 
     <label for="name"> Course name</label>
-    <input type="text" name="name" id="name" required>
-    <label for="content"> Course content</label>
-    <textarea name="content" id="content" ></textarea>
-    <label for="course_image"> Course image</label>
-    <input type="file" name="course_image" id="course_image" >
-    <label for="course_documents"> Course documents</label>
-    <input type="file" name="course_documents" id="course_documents" >
-    
-    <input type="submit" id="create_course_button" value="create course">
-    
+    <input class="form-control" placeholder="Course name" aria-label="Username" aria-describedby="basic-addon1" type="text" name="name" id="name" required><br><br>
+    <label class="input-group-text" for="content"> Course content</label>
+    <textarea class="form-control" aria-label="With textarea" name="content" id="content" ></textarea>
+    <br><br>
+    <label for="course_image" class="form-label"> Course image</label>
+    <input type="file" class="form-control form-control-sm"  name="course_image" id="course_image" >
+    <br><br>
+    <label for="course_documents"  class="form-label"> Course documents</label>
+    <input class="form-control form-control-lg" id="formFileLg" type="file" name="course_documents" id="course_documents" >
+    <br><br>
+    <div class="d-grid gap-3">
+    <input class="btn btn-primary" type="submit" id="create_course_button" value="create course">
+    </div>
 
 </form>
 

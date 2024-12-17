@@ -8,12 +8,12 @@
 <h1>Create Subject </h1>
 <form id ="create_subject" method="post">
     {% csrf_token %}
-    <input id ="teacher" name ="teacher" value="{{ request.user }}" hidden>
+    <input class="form-control" placeholder="Course name" aria-label="Username" aria-describedby="basic-addon1" id ="teacher" name ="teacher" value="{{ request.user }}" hidden><br>
     <label> Subject name</label>
-    <input type="text" name="subject_name" id="subject_name">
+    <input class="form-control" placeholder="Course name" aria-label="Username" aria-describedby="basic-addon1" type="text" name="subject_name" id="subject_name">
     <label> Subject description</label>
-    <textarea name="subject_description" id="subject_description" required></textarea>
-    <input type="submit" id="create_subject" value="create subject">
+    <textarea class="form-control" aria-label="With textarea" name="subject_description" id="subject_description" required></textarea> <br>
+    <input class="btn btn-primary " type="submit" id="create_subject" value="create subject">
     
 
 </form>
