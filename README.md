@@ -1,6 +1,4 @@
 E-Learning Platform
-Introduction
-My name is Maryame El Khalfi, a student at the National Institute of Statistics and Applied Economics in Morocco. As a student, I frequently work with web applications such as Google Classroom, Microsoft Teams, and Zoom—platforms where teachers share courses and educational content with students. Inspired by these tools, I decided to create a custom e-learning web application called "e-Learning" as my final project.
 This application is designed to manage users with different roles:
 •	Admins: Manage the system and view global statistics.
 •	Teachers: Create subjects, add courses, view enrolled students, and track engagement.
@@ -16,7 +14,7 @@ o	Create subjects with a name and description.
 o	Add courses for each subject with:
 	Name
 	Content
-	Documents (optional
+	Documents (optional)
 	Images (optional)
 o	Delete any course by providing the subject and course name.
 o	View statistics on their profile:
@@ -56,23 +54,6 @@ o	Number of students enrolled in each subject.
 5. Subjects and Courses
 •	Teachers can add subjects with descriptions and attach multiple courses under each subject.
 •	Students can browse, enroll, and view subjects and their courses.
-
-Distinctiveness and Complexity
-Distinctiveness
-This project is distinct from my previous projects because of the following new features:
-1.	Profile Statistics: Teachers can view the number of students enrolled in their subjects, and admins can monitor all subjects and engagement.
-2.	Opened Courses Tracking: Students can track which courses they have already viewed on their profile page.
-3.	Editable Profile: Users can edit their profile information, including uploading a custom profile photo.
-4.	Role-Specific Functionality: Each type of user (Admin, Teacher, Student) has unique features tailored to their role.
-5.	Document and Image Management: Courses can include files and images that are displayed seamlessly on the course page.
-Complexity
-Developing this project involved several challenges that demonstrate its complexity:
-1.	Role-Based User Management: Differentiating between admins, teachers, students, and normal users required careful design of models, logic, and views.
-2.	Tracking Opened Courses: Implementing a feature to mark and display "opened courses" involved database updates and logic to ensure the correct courses are tracked for each student.
-3.	File and Image Handling: Allowing teachers to upload documents and images and displaying them within courses added complexity, particularly in ensuring proper file management and rendering.
-4.	Interactive Comments: Building an instant commenting system required integrating Django with JavaScript for real-time updates.
-5.	Editable Profiles: Enabling users to modify their profile information and upload photos involved forms, validation, and file management.
-
 Project Files and Structure
 E_learning/: Main Django application folder.
 1.	models.py: Contains models for Users, Subjects, Courses, Enrolled Subjects, and Comments, Opened course .
@@ -94,4 +75,12 @@ E_learning/: Main Django application folder.
 13.	Register.html: Page where new users can register and choose their role
 14.	Not_authorized.html: when a non authorized user trying to access a page he will render to this page
 5.	static/: Contains CSS and JavaScript files.
-6.	Media: contains uploaded media like documents ,and images. 
+6.	Media: contains uploaded media like documents ,and images.
+7.	Complexity
+Developing this project involved several challenges that demonstrate its complexity:
+1.	Role-Based User Management: Differentiating between admins, teachers, students, and normal users required careful design of models, logic, and views.
+2.	Tracking Opened Courses: Implementing a feature to mark and display "opened courses" involved database updates and logic to ensure the correct courses are tracked for each student.
+3.	File and Image Handling: Allowing teachers to upload documents and images and displaying them within courses added complexity, particularly in ensuring proper file management and rendering.
+4.	Interactive Comments: Building an instant commenting system required integrating Django with JavaScript for real-time updates.
+5.	Editable Profiles: Enabling users to modify their profile information and upload photos involved forms, validation, and file management.
+
